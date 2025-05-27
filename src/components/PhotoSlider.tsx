@@ -58,6 +58,8 @@ const PhotoSlider = () => {
     setCurrentIndex((prev) => (prev === photos.length - 1 ? 0 : prev + 1));
   };
 
+  const getWrappedIndex = (i: number) => (i + photos.length) % photos.length;
+
   return (
     <Box
       sx={{
@@ -69,7 +71,7 @@ const PhotoSlider = () => {
       }}
     >
       {[currentIndex - 1, currentIndex, currentIndex + 1]?.map((i) => {
-        const photo = photos[(i + photos.length) % photos.length];
+        const photo = photos[getWrappedIndex(i)];
         const isVisible = i === currentIndex;
         return (
           <Box
@@ -107,7 +109,7 @@ const PhotoSlider = () => {
           textShadow: theme.customComponents.photoSlider.overlay.textShadow,
         }}
       >
-        By {photos[currentIndex].author}
+        By {photos[currentIndex]?.author}
       </Typography>
       <NavigationControls onPrevious={handlePrevious} onNext={handleNext} />
       <Typography
@@ -121,7 +123,7 @@ const PhotoSlider = () => {
           textShadow: theme.customComponents.photoSlider.overlay.textShadow,
         }}
       >
-        {currentIndex + 1} / {photos.length}
+        {currentIndex + 1} / {photos?.length}
       </Typography>
     </Box>
   );
