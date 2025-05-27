@@ -1,66 +1,20 @@
 import { useState } from "react";
-import { Box, Typography, useTheme, Skeleton } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { usePhotos } from "../hooks/useGetPhotos";
 import NavigationControls from "./NavigationControls";
 import SliderDots from "./SliderDots";
+import ErrorComponent from "./Error";
+import LoadingComponent from "./Loading";
+import NotFoundComponent from "./NotFound";
 
 const PhotoSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const theme = useTheme();
   const { data: photos, isLoading, isError, refetch } = usePhotos();
 
-  if (isLoading) {
-    return (
-      <Box sx={{ width: "100%", maxWidth: 800, margin: "0 auto" }}>
-        <Skeleton
-          variant="rounded"
-          width="100%"
-          height={400}
-          animation="wave"
-          sx={{
-            borderRadius: 2,
-            bgcolor: "grey.300",
-          }}
-        />
-        <Skeleton
-          variant="text"
-          width="100%"
-          height={40}
-          animation="wave"
-          sx={{
-            mt: 2,
-            bgcolor: "grey.300",
-            borderRadius: 1,
-          }}
-        />
-      </Box>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Box sx={{ textAlign: "center", p: 4 }}>
-        <Typography color="error">Error loading photos</Typography>
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          Please try again later or{" "}
-          <span
-            style={{ cursor: "pointer", color: theme.palette.primary.main }}
-            onClick={() => refetch()}
-          >
-            retry
-          </span>
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (!photos?.length) {
-    return (
-      <Box sx={{ textAlign: "center", p: 4 }}>
-        <Typography>No photos available</Typography>
-      </Box>
-    );
-  }
+  if (isLoading) return <LoadingComponent />;
+  if (isError) return <ErrorComponent refetch={refetch} />;
+  if (!photos?.length) return <NotFoundComponent />;
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
