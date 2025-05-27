@@ -1,7 +1,16 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createTheme, ThemeProvider } from "@mui/material";
 import "./App.css";
 
 function App() {
-  return <></>;
+  const queryClient = new QueryClient();
+  const theme = createTheme();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}></ThemeProvider>
+    </QueryClientProvider>
+  );
 }
 
 export default App;
