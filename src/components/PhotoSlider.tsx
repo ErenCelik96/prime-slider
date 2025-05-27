@@ -6,7 +6,7 @@ import NavigationControls from "./NavigationControls";
 const PhotoSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const theme = useTheme();
-  const { data: photos, isLoading, isError } = usePhotos();
+  const { data: photos, isLoading, isError, refetch } = usePhotos();
 
   if (isLoading) {
     return (
@@ -29,6 +29,15 @@ const PhotoSlider = () => {
     return (
       <Box sx={{ textAlign: "center", p: 4 }}>
         <Typography color="error">Error loading photos</Typography>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          Please try again later or{" "}
+          <span
+            style={{ cursor: "pointer", color: theme.palette.primary.main }}
+            onClick={() => refetch()}
+          >
+            retry
+          </span>
+        </Typography>
       </Box>
     );
   }
