@@ -72,6 +72,13 @@ const PhotoSlider = () => {
 
   const getWrappedIndex = (i: number) => (i + photos.length) % photos.length;
 
+  const handleDotClick = (i: number) => {
+    const img = new Image();
+    img.src = photos[i].download_url;
+
+    img.onload = () => setCurrentIndex(i);
+  };
+
   return (
     <>
       <Box
@@ -101,7 +108,6 @@ const PhotoSlider = () => {
                 opacity: isVisible ? 1 : 0,
                 position: isVisible ? "relative" : "absolute",
                 transition: "opacity 0.3s ease-in-out",
-                display: isVisible ? "block" : "none",
                 borderRadius: 2,
                 boxShadow: theme.shadows[4],
               }}
@@ -143,7 +149,7 @@ const PhotoSlider = () => {
       <SliderDots
         photos={photos}
         currentIndex={currentIndex}
-        setCurrentIndex={setCurrentIndex}
+        setCurrentIndex={handleDotClick}
       />
     </>
   );
