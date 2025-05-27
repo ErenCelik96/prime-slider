@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Box, Typography, useTheme, Skeleton } from "@mui/material";
 import { usePhotos } from "../hooks/useGetPhotos";
 import NavigationControls from "./NavigationControls";
+import SliderDots from "./SliderDots";
 
 const PhotoSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -10,7 +11,7 @@ const PhotoSlider = () => {
 
   if (isLoading) {
     return (
-      <Box sx={{ width: "100%", maxWidth: 800, margin: "0 auto", p: 4 }}>
+      <Box sx={{ width: "100%", maxWidth: 800, margin: "0 auto" }}>
         <Skeleton
           variant="rounded"
           width="100%"
@@ -18,7 +19,18 @@ const PhotoSlider = () => {
           animation="wave"
           sx={{
             borderRadius: 2,
-            bgcolor: "grey.200",
+            bgcolor: "grey.300",
+          }}
+        />
+        <Skeleton
+          variant="text"
+          width="100%"
+          height={40}
+          animation="wave"
+          sx={{
+            mt: 2,
+            bgcolor: "grey.300",
+            borderRadius: 1,
           }}
         />
       </Box>
@@ -61,71 +73,79 @@ const PhotoSlider = () => {
   const getWrappedIndex = (i: number) => (i + photos.length) % photos.length;
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: 800,
-        height: 400,
-        margin: "0 auto",
-        position: "relative",
-      }}
-    >
-      {[currentIndex - 1, currentIndex, currentIndex + 1]?.map((i) => {
-        const photo = photos[getWrappedIndex(i)];
-        const isVisible = i === currentIndex;
-        return (
-          <Box
-            key={photo.id}
-            component="img"
-            src={photo.download_url}
-            alt={`Photo by ${photo.author}`}
-            sx={{
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              opacity: isVisible ? 1 : 0,
-              position: isVisible ? "relative" : "absolute",
-              transition: "opacity 0.3s ease-in-out",
-              display: isVisible ? "block" : "none",
-              borderRadius: 2,
-              boxShadow: theme.shadows[4],
-            }}
-          />
-        );
-      })}
-      <Typography
-        variant="body2"
+    <>
+      <Box
         sx={{
-          position: "absolute",
-          top: 8,
-          right: 8,
-          color: "white",
-          backgroundColor:
-            theme.customComponents.photoSlider.overlay.background,
-          padding: "4px 8px",
-          borderRadius: theme.customComponents.photoSlider.overlay.borderRadius,
-          textShadow: theme.customComponents.photoSlider.overlay.textShadow,
+          width: "100%",
+          maxWidth: 800,
+          height: 400,
+          margin: "0 auto",
+          position: "relative",
         }}
       >
-        By {photos[currentIndex]?.author}
-      </Typography>
-      <NavigationControls onPrevious={handlePrevious} onNext={handleNext} />
-      <Typography
-        variant="caption"
-        sx={{
-          position: "absolute",
-          bottom: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          color: "white",
-          textShadow: theme.customComponents.photoSlider.overlay.textShadow,
-        }}
-      >
-        {currentIndex + 1} / {photos?.length}
-      </Typography>
-    </Box>
+        {[currentIndex - 1, currentIndex, currentIndex + 1]?.map((i) => {
+          const photo = photos[getWrappedIndex(i)];
+          const isVisible = i === currentIndex;
+          return (
+            <Box
+              key={photo.id}
+              component="img"
+              src={photo.download_url}
+              alt={`Photo by ${photo.author}`}
+              sx={{
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                opacity: isVisible ? 1 : 0,
+                position: isVisible ? "relative" : "absolute",
+                transition: "opacity 0.3s ease-in-out",
+                display: isVisible ? "block" : "none",
+                borderRadius: 2,
+                boxShadow: theme.shadows[4],
+              }}
+            />
+          );
+        })}
+        <Typography
+          variant="body2"
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            color: "white",
+            backgroundColor:
+              theme.customComponents.photoSlider.overlay.background,
+            padding: "4px 8px",
+            borderRadius:
+              theme.customComponents.photoSlider.overlay.borderRadius,
+            textShadow: theme.customComponents.photoSlider.overlay.textShadow,
+          }}
+        >
+          By {photos[currentIndex]?.author}
+        </Typography>
+        <NavigationControls onPrevious={handlePrevious} onNext={handleNext} />
+        <Typography
+          variant="caption"
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            color: "white",
+            textShadow: theme.customComponents.photoSlider.overlay.textShadow,
+          }}
+        >
+          {currentIndex + 1} / {photos?.length}
+        </Typography>
+      </Box>
+      <SliderDots
+        photos={photos}
+        currentIndex={currentIndex}
+        setCurrentIndex={setCurrentIndex}
+      />
+    </>
   );
 };
 
